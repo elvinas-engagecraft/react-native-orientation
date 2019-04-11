@@ -42,6 +42,10 @@ static UIInterfaceOrientationMask _orientation = UIInterfaceOrientationMaskAllBu
 - (void)deviceOrientationDidChange:(NSNotification *)notification
 {
   UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+  // Ignore changes in device orientation if unknown, face up, or face down - you get multiple calls on application restore from background.
+	if(!UIDeviceOrientationIsValidInterfaceOrientation(orientation)){
+		return;
+	}
   [self.bridge.eventDispatcher sendDeviceEventWithName:@"specificOrientationDidChange"
                                               body:@{@"specificOrientation": [self getSpecificOrientationStr:orientation]}];
 
